@@ -36,29 +36,35 @@ const SignInForm: React.FC<SignInFormProps> = ({
     password,
   },
   errors,
+  touched,
   isSubmitting,
   handleChange,
+  handleBlur,
   handleSubmit
 }) => {
+
   return (
     <View style={styles.container}>
       <Title style={styles.title}>Zaloguj się do aplikacji</Title>
       <TextInput
         label="Email"
         value={email}
+        autoCapitalize="none"
         onChangeText={handleChange('email')}
+        onBlur={handleBlur('email')}
       />
-      <HelperText type="error" visible={!!errors.email}>
-        {errors.email}
+      <HelperText type="error">
+        {!!errors.email && touched.email ? errors.email : ''}
       </HelperText>
       <TextInput
         label="Hasło"
         value={password}
         secureTextEntry
         onChangeText={handleChange('password')}
+        onBlur={handleBlur('password')}
       />
-      <HelperText type="error" visible={!!errors.password}>
-        {errors.password}
+      <HelperText type="error">
+        {!!errors.password && touched.password ? errors.password : ''}
       </HelperText>
       <Button
         mode="contained"
