@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
-import { StatusBar } from 'expo-status-bar'
+import React, { useState, useEffect } from 'react'
+import { AppLoading } from 'expo'
 import { NavigationContainer } from '@react-navigation/native'
 import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
 import * as Notifications from 'expo-notifications'
 
 import { DRINK_WATER_REMINDER_TASK } from 'constants/tasks'
-import { PersistedAuthProvider } from 'providers/PersistedAuthProvider'
 import { StackNavigator } from 'navigation/StackNavigator'
+import { usePersistedAuthContext } from 'providers/PersistedAuthProvider'
 
 const handlePresentLocalNotificationAsync = async () => {
   await Notifications.setNotificationHandler({
@@ -35,7 +35,18 @@ TaskManager.defineTask(DRINK_WATER_REMINDER_TASK, async () => {
   }
 })
 
-export default function App() {
+type AppProps = {
+  skipLoadingScreen?: boolean
+}
+
+function handleFinishLoading(setIsLoadingComplete: (n: boolean) => void) {
+  setIsLoadingComplete(true)
+}
+
+const App: React.FC<AppProps> = ({ skipLoadingScreen = false }) => {
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false)
+  const { authState } = usePersistedAuthContext()
+
   useEffect(() => {
     const registerTaskAsync = async () => {
       BackgroundFetch.registerTaskAsync(DRINK_WATER_REMINDER_TASK, {
@@ -49,12 +60,19 @@ export default function App() {
     registerTaskAsync()
   }, [])
 
+  if (!isLoadingComplete && !skipLoadingScreen && authState === 'loading') {
+    return (
+      <AppLoading
+        onFinish={() => handleFinishLoading(setIsLoadingComplete)}
+      />
+    )
+  }
+
   return (
-    <PersistedAuthProvider>
-      <NavigationContainer>
-        <StackNavigator />
-        <StatusBar style="auto" />
-      </NavigationContainer>
-    </PersistedAuthProvider>
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
   )
 }
+
+export { App }
