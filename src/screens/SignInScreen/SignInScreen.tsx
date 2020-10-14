@@ -5,7 +5,7 @@ import { useFormik } from 'formik'
 import { usePersistedAuthContext } from 'providers/PersistedAuthProvider'
 import { SignInForm, SignInFormValues } from './SignInForm'
 import { signInSchema } from 'schemas/signInSchema'
-import Firebase from '../../../config/Firebase'
+import { Firebase } from 'config/firebase'
 
 const SignInScreen: React.FC = () => {
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false)

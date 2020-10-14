@@ -21,7 +21,7 @@ const handlePresentLocalNotificationAsync = async () => {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: 'Fill The Water',
-      body: "Napij się wody!",
+      body: 'Czas napić się wody!',
     },
     trigger: null
   })

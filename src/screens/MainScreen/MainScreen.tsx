@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { AsyncStorage, View, StyleSheet } from 'react-native'
 import { Title, Paragraph, Snackbar, TextInput } from 'react-native-paper'
 
 import { drinkItems } from './drinkItems'
@@ -101,7 +101,7 @@ const MainScreen: React.FC = () => {
           label: 'OK',
           onPress: () => {},
         }}>
-        Aby wybrać ilość wypitej wody, najpierw należy wprowadzić dzienny cel
+        Aby wybrać ilość spożytej wody, najpierw należy wprowadzić dzienny cel
       </Snackbar>
     </>
   )
