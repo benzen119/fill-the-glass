@@ -13,8 +13,8 @@ const SignInScreen: React.FC = () => {
 
   const formikProps = useFormik<SignInFormValues>({
     initialValues: {
-      email: 'kowalski@yopmail.com',
-      password: 'password',
+      email: '',
+      password: '',
     },
     validationSchema: signInSchema,
     onSubmit: async ({ email, password }, { setSubmitting }) => {
