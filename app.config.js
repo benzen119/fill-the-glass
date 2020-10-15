@@ -22,6 +22,7 @@ export default {
       supportsTablet: true
     },
     android: {
+      package: 'com.kamil.filltheglass',
       useNextNotificationsApi: true
     },
     web: {
