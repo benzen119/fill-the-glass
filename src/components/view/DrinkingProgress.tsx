@@ -20,7 +20,12 @@ type DrinkingProgresssProps = {
   style: ViewStyle
 }
 
-const DrinkingProgress: React.FC<DrinkingProgresssProps> = ({ progress, dailyGoal, style, waterConsumed }) => {
+const DrinkingProgress: React.FC<DrinkingProgresssProps> = ({
+  progress,
+  dailyGoal,
+  style,
+  waterConsumed
+}) => {
   return (
     <View style={style}>
       <ProgressBar
