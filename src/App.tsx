@@ -6,6 +6,8 @@ import * as Notifications from 'expo-notifications'
 
 import { DRINK_WATER_REMINDER_TASK } from 'constants/tasks'
 import { StackNavigator } from 'navigation/StackNavigator'
+import { LoadingScreen } from 'screens/LoadingScreen/LoadingScreen'
+import { usePersistedAuthContext } from 'providers/PersistedAuthProvider'
 
 const handlePresentLocalNotificationAsync = async () => {
   await Notifications.setNotificationHandler({
@@ -34,6 +36,8 @@ TaskManager.defineTask(DRINK_WATER_REMINDER_TASK, async () => {
 })
 
 const App: React.FC = () => {
+  const { authState } = usePersistedAuthContext()
+
   useEffect(() => {
     const registerTaskAsync = async () => {
       BackgroundFetch.registerTaskAsync(DRINK_WATER_REMINDER_TASK, {
@@ -46,6 +50,10 @@ const App: React.FC = () => {
   
     registerTaskAsync()
   }, [])
+
+  if (authState === 'loading') {
+    return <LoadingScreen />
+  }
 
   return (
     <NavigationContainer>
