@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { View, StyleSheet } from 'react-native'
-import { Title, Paragraph, Snackbar, TextInput } from 'react-native-paper'
+import { Alert, View, StyleSheet } from 'react-native'
+import {
+  Button,
+  Title,
+  Paragraph,
+  Snackbar,
+  TextInput
+} from 'react-native-paper'
 
 import { DrinkListItem } from 'components/view/DrinkListItem'
 import { DrinkingProgress } from 'components/view/DrinkingProgress'
@@ -33,14 +39,18 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   propgress: {
-    marginTop: 60,
+    marginTop: 30,
   }
 })
 
 const MainScreen: React.FC = () => {
   const dispatch = useDispatch()
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false)
-  const { progress, waterConsumed, dailyGoal } = useSelector((state: { drink: any }) => state.drink)
+  const {
+    progress,
+    waterConsumed,
+    dailyGoal
+  } = useSelector((state: { drink: any }) => state.drink)
 
   const handleAddQuantity = (value: number): void => {
     if (dailyGoal) {
@@ -56,6 +66,28 @@ const MainScreen: React.FC = () => {
     dispatch(setDailyGoal(value))
     const newProgressValue = waterConsumed / parseInt(value)
     dispatch(setProgress(newProgressValue))
+  }
+
+  const handleResetProgress = () => {
+    Alert.alert(
+      'Uwaga',
+      'Czy na pewno chcesz zresetować swój progres?',
+      [
+        {
+          text: 'Anuluj',
+          onPress: () => {},
+          style: 'cancel'
+        },
+        {
+          text: 'Tak',
+          onPress: () => {
+            dispatch(setProgress(0))
+            dispatch(setWaterConsumed(0))
+          } 
+        }
+      ],
+      { cancelable: false }
+    )
   }
   
   return (
@@ -80,6 +112,14 @@ const MainScreen: React.FC = () => {
                 waterConsumed={waterConsumed}
               />
             ) : null}
+            {waterConsumed > 0 && (
+              <Button
+                mode="text"
+                onPress={handleResetProgress}
+              >
+                Resetuj dzienne osiągnięcie
+              </Button>
+            )}
           </View>
           <View>
             <Paragraph style={styles.paragraph}>Wybierz ilość wody, którą właśnie wypiłeś</Paragraph>
@@ -102,7 +142,7 @@ const MainScreen: React.FC = () => {
           label: 'OK',
           onPress: () => {},
         }}>
-        Aby wybrać ilość spożytej wody, najpierw należy wprowadzić dzienny cel
+        Aby wybrać ilość spożytej wody, należy najpierw ustawić dzienny cel
       </Snackbar>
     </>
   )
