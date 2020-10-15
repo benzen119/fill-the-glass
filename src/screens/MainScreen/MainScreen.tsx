@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { AsyncStorage, View, StyleSheet } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'
+import { View, StyleSheet } from 'react-native'
 import { Title, Paragraph, Snackbar, TextInput } from 'react-native-paper'
 
-import { drinkItems } from './drinkItems'
-import { DrinkingCharacter } from 'icons'
 import { DrinkListItem } from 'components/view/DrinkListItem'
 import { DrinkingProgress } from 'components/view/DrinkingProgress'
+import { DrinkingCharacter } from 'icons'
+import { drinkItems } from './drinkItems'
+import { setDailyGoal, setProgress, setWaterConsumed } from 'store/drink'
 
 const styles = StyleSheet.create({
   page: {
@@ -36,25 +38,24 @@ const styles = StyleSheet.create({
 })
 
 const MainScreen: React.FC = () => {
-  const [progress, setProgress] = useState(0)
-  const [waterConsumed, setWaterConsumed] = useState(0)
-  const [dailyGoal, setDailyGoal] = useState('')
+  const dispatch = useDispatch()
   const [isSnackbarVisible, setIsSnackbarVisible] = useState(false)
+  const { progress, waterConsumed, dailyGoal } = useSelector((state: { drink: any }) => state.drink)
 
   const handleAddQuantity = (value: number): void => {
     if (dailyGoal) {
       const newProgressValue = value / parseInt(dailyGoal)
-      setProgress(currentValue => currentValue + newProgressValue)
-      setWaterConsumed(currentConsumedWater => currentConsumedWater + value)
+      dispatch(setProgress(progress + newProgressValue))
+      dispatch(setWaterConsumed(waterConsumed + value))
     } else {
       setIsSnackbarVisible(true)
     }
   }
 
   const handleChangeDailyGoal = (value: string): void => {
-    setDailyGoal(value)
+    dispatch(setDailyGoal(value))
     const newProgressValue = waterConsumed / parseInt(value)
-    setProgress(newProgressValue)
+    dispatch(setProgress(newProgressValue))
   }
   
   return (
