@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
+import { AppLoading } from 'expo'
 import * as BackgroundFetch from 'expo-background-fetch'
 import * as TaskManager from 'expo-task-manager'
 import * as Notifications from 'expo-notifications'
 
 import { DRINK_WATER_REMINDER_TASK } from 'constants/tasks'
 import { StackNavigator } from 'navigation/StackNavigator'
-import { LoadingScreen } from 'screens/LoadingScreen/LoadingScreen'
-import { usePersistedAuthContext } from 'providers/PersistedAuthProvider'
 
 const handlePresentLocalNotificationAsync = async () => {
   await Notifications.setNotificationHandler({
@@ -35,8 +34,16 @@ TaskManager.defineTask(DRINK_WATER_REMINDER_TASK, async () => {
   }
 })
 
-const App: React.FC = () => {
-  const { authState } = usePersistedAuthContext()
+function handleFinishLoading(setIsLoadingComplete: (n: boolean) => void) {
+  setIsLoadingComplete(true)
+}
+
+type AppProps = {
+  skipLoadingScreen?: boolean
+}
+
+const App: React.FC<AppProps> = ({ skipLoadingScreen = false }) => {
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false)
 
   useEffect(() => {
     const registerTaskAsync = async () => {
@@ -51,8 +58,13 @@ const App: React.FC = () => {
     registerTaskAsync()
   }, [])
 
-  if (authState === 'loading') {
-    return <LoadingScreen />
+  if (!isLoadingComplete && !skipLoadingScreen) {
+    return (
+      <AppLoading
+        startAsync={async () => {}} // no-op to call the async method for proper usage of AppLoading
+        onFinish={() => handleFinishLoading(setIsLoadingComplete)}
+      />
+    )
   }
 
   return (

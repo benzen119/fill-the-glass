@@ -12,6 +12,7 @@ const Stack = createStackNavigator()
 
 const StackNavigator: React.FC = () => {
   const { signOut, authState } = usePersistedAuthContext()
+
   const renderLogoutButton = () => (
     authState === 'userSignedIn' ? (
       <TouchableRipple onPress={signOut}>
